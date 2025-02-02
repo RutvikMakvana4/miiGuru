@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import path from "path";
 import "./src/common/config/dbConnection";
+import "./src/common/config/jwtPassport";
 
 const app = express();
 
