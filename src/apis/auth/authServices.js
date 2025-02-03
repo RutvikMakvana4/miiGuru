@@ -1,6 +1,9 @@
+import AccessToken from "../../../models/accessToken";
+import RefreshToken from "../../../models/refreshToken";
 import User from "../../../models/users";
-import { BadRequestException, ConflictException, NotFoundException } from "../../common/exceptions/errorException";
+import { BadRequestException, ConflictException, NotFoundException, UnauthorizedException } from "../../common/exceptions/errorException";
 import authHelper from "../../common/helper/authHelper";
+import jwt from "jsonwebtoken";
 
 
 class AuthServices {
@@ -47,6 +50,39 @@ class AuthServices {
 
         return { findUser, authentication }
     }
+
+    /**
+     * @description: Logout users
+     * @param {*} data
+     * @param {*} req 
+     * @param {*} res
+     */
+    static async logout(req, res) {
+        const token = await req.headers.authorization.split(" ")[1];
+        const decodedToken = jwt.decode(token)
+        const decodedData = await JSON.parse(decodedToken.data);
+        const findToken = await AccessToken.findOne({ token: decodedData.jti });
+        if (!findToken) {
+            throw new UnauthorizedException("This access token is expired , please login !")
+        }
+        await AccessToken.findByIdAndDelete({ _id: findToken._id });
+        await RefreshToken.findOneAndDelete({ accessToken: findToken.token });
+        return
+    }
+
+    /**
+     * @description : genearte new access token
+     * @param {*} data 
+     * @param {*} req 
+     * @param {*} res 
+     * @returns 
+     */
+    static async newAccessToken(data, req, res) {
+        const { refreshToken } = data;
+        const authentication = await authHelper.generateNewAccessToken(refreshToken);
+        return { authentication };
+    }
+
 }
 
 export default AuthServices;

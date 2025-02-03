@@ -2,6 +2,7 @@ import { JWT } from "../constants/constants";
 import jwt from "jsonwebtoken";
 import RefreshToken from "../../../models/refreshToken";
 import AccessToken from "../../../models/accessToken";
+import { BadRequestException } from "../exceptions/errorException";
 
 class authHelper {
 
@@ -48,6 +49,32 @@ class authHelper {
         const { accessToken, expiresAt } = await this.generateAccessToken(authUser)
         if (accessToken) { var refreshToken = await this.generateRefreshToken(accessToken) }
         return { accessToken, refreshToken, expiresAt }
+    }
+
+
+    /**
+     * @description : generate new access token
+     * @param {*} refreshToken 
+     */
+    static async generateNewAccessToken(refreshToken) {
+        const findRefreshToken = await RefreshToken.findOne({ token: refreshToken });
+
+        if (!findRefreshToken) {
+            throw new BadRequestException('Refresh token expired');
+        }
+
+        const findAccessToken = await AccessToken.findOne({ token: findRefreshToken.accessToken });
+
+        if (!findAccessToken) {
+            throw new BadRequestException('Access token expired');
+        }
+
+        const user = findAccessToken.userId;
+
+        await AccessToken.findByIdAndDelete(findAccessToken._id)
+        await RefreshToken.findByIdAndDelete(findRefreshToken._id)
+
+        return await this.generateTokenPairs(user)
     }
 }
 
