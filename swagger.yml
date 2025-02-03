@@ -1,0 +1,202 @@
+openapi: "3.0.2"
+info:
+  title: aiGuru
+  version: "1.0.0"
+components:
+  # Authentication using bearer token
+  securitySchemes:
+    bearerAuth:
+      description: "#### Example: Bearer [TOKEN]"
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # Response message
+  responses:
+    Success:
+      description: |
+        - success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: success
+
+    UnprocessableEntity:
+      description: |
+        - Unprocessable Entity
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: validation error
+
+    ConflictError:
+      description: |
+        - ConflictError
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: conflict error
+
+    BadRequestError:
+      description: |
+        - bad request error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: bad request error
+
+    UnauthorizedError:
+      description: |
+        - Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+
+    NotFoundError:
+      description: |
+        - NotFoundError
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Not Found
+
+paths:
+  /auth/register:
+    post:
+      description: register user
+      summary: register user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rutvik@mailinator.com
+                password:
+                  type: string
+                  example: rutvik@123
+                confirmPassword:
+                  type: string
+                  example: rutvik@123
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+
+  /auth/login:
+    post:
+      description: login user
+      summary: login user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: rutvik@mailinator.com
+                password:
+                  type: string
+                  example: rutvik@123
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+
+  /auth/refresh-token:
+    post:
+      description: Refresh token
+      summary: Refresh token
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzM3NDAxMjI3OGEzMGRiODUyYTM1N2MiLCJpYXQiOjE3MzE2Nzc5ODUsImV4cCI6MTczMjI4Mjc4NX0.yUkxGyGn-8ljEEjjEoSi5H2P_CocV2ptaMRCQz7O4Dw
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+
+  /auth/logout:
+    post:
+      description: Logout
+      summary: Logout
+      tags:
+        - Auth
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzM3NDAxMjI3OGEzMGRiODUyYTM1N2MiLCJpYXQiOjE3MzE2Nzc5ODUsImV4cCI6MTczMjI4Mjc4NX0.yUkxGyGn-8ljEEjjEoSi5H2P_CocV2ptaMRCQz7O4Dw
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+
+  

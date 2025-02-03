@@ -5,6 +5,7 @@ import "./src/common/config/dbConnection";
 import "./src/common/config/jwtPassport";
 import mainRouter from "./routes/index";
 import errorMiddleware from "./src/common/middleware/error";
+import swaggerSetup from "./src/common/swagger";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
   res.status(200).send("App is working!");
 });
 
+app.use(swaggerSetup);
 app.use(mainRouter);
 
 app.use(express.static(path.join(__dirname + "/public")));
