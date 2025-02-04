@@ -17,6 +17,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
+    googleId:{
+      type: String,
+    },
+    facebookId: {
+      type: String
+    }
   },
   {
     timestamps: true,

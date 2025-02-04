@@ -45,6 +45,22 @@ class AuthController {
         const data = await AuthServices.newAccessToken(req.body);
         return res.send({ data })
     }
+
+    /**
+     * @description: Social login
+     * @param {*} req 
+     * @param {*} res 
+     * @returns 
+     */
+    static async socialLogin(req, res) {
+        try {
+          const user = req.user;
+          const authentication = await authHelper.generateTokenPairs(user._id);
+          return res.redirect(`http://localhost:3000?token=${authentication.accessToken}`);
+        } catch (error) {
+          return res.status(500).json({ message: "Authentication failed", error });
+        }
+      }
 }
 
 export default AuthController;
