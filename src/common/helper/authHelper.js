@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import RefreshToken from "../../../models/refreshToken";
 import AccessToken from "../../../models/accessToken";
 import { BadRequestException } from "../exceptions/errorException";
+import commonHelper from "./commonHelper";
 
 class authHelper {
 
@@ -11,7 +12,7 @@ class authHelper {
      * @param {*} userId
      */
     static async generateAccessToken(userId) {
-        const jti = randomStringGenerator()
+        const jti = await commonHelper.randomStringGenerator(72)
         const data = await JSON.stringify({ userId, jti });
         const accessToken = jwt.sign({ data }, JWT.SECRET, { expiresIn: JWT.EXPIRES_IN });
         const decodedToken = jwt.decode(accessToken)
@@ -29,11 +30,14 @@ class authHelper {
      * @returns 
      */
     static async generateRefreshToken(accessToken) {
-        const refreshToken = randomStringGenerator()
+        const refreshToken = await commonHelper.randomStringGenerator(72)
         const decodedToken = jwt.decode(accessToken)
         const accessJti = await JSON.parse(decodedToken.data);
 
+        console.log(accessJti)
+
         await RefreshToken.create({
+            userId: accessJti.userId,
             token: refreshToken,
             accessToken: accessJti.jti
         });

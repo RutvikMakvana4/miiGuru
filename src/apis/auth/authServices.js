@@ -4,6 +4,9 @@ import User from "../../../models/users";
 import { BadRequestException, ConflictException, NotFoundException, UnauthorizedException } from "../../common/exceptions/errorException";
 import authHelper from "../../common/helper/authHelper";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { BCRYPT } from "../../common/constants/constants";
+import LoginResource from "./resources/loginResource";
 
 
 class AuthServices {
@@ -48,7 +51,7 @@ class AuthServices {
 
         const authentication = await authHelper.generateTokenPairs(findUser._id)
 
-        return { findUser, authentication }
+        return { ...new LoginResource(findUser), authentication }
     }
 
     /**

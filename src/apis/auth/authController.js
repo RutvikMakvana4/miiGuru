@@ -10,7 +10,7 @@ class AuthController {
      */
     static async register(req, res) {
         await AuthServices.register(req.body);
-        return res.send({ message: "User regsiterd successfully" })
+        return res.send({ message: "User registered successfully" })
     }
 
     /**

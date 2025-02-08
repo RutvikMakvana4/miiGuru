@@ -199,4 +199,37 @@ paths:
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
 
-  
+  /other/contact-us:
+    post:
+      description: Contact Us
+      summary: Contact Us
+      tags:
+        - Others
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: rutvik makvana
+                email:
+                  type: string
+                  example: rutvik@mailinator.com
+                message:
+                  type: string
+                  example: Hello how are you !
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"

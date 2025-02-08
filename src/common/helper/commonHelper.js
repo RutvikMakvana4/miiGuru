@@ -1,5 +1,6 @@
 import { BCRYPT } from "../constants/constants";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 class commonHelper {
 
@@ -32,6 +33,14 @@ class commonHelper {
     } catch (error) {
       throw new Error("Failed to compare passwords");
     }
+  }
+
+  /**
+   * @description: random string generator
+   * @param {*} size 
+   */
+  static async randomStringGenerator(size){
+    return await crypto.randomBytes(size).toString("hex")
   }
 
 

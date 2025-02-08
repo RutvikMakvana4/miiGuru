@@ -4,6 +4,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as FacebookStrategy } from "passport-facebook";
 import User from "../../../models/users";
 import { JWT } from "../constants/constants";
+import AccessToken from "../../../models/accessToken";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -15,7 +16,7 @@ passport.use(new JwtStrategy(options, async (payload, done) => {
     const decodedData = JSON.parse(payload.data)
 
     const checkToken = await AccessToken.findOne({
-      userId: decodedData.user,
+      userId: decodedData.userId,
       token: decodedData.jti
     });
 
@@ -23,7 +24,8 @@ passport.use(new JwtStrategy(options, async (payload, done) => {
       return done(null, false)
     }
 
-    const user = decodedData.user
+    const user = decodedData.userId
+
     return done(null, user)
   } catch (error) {
     console.log(error);
