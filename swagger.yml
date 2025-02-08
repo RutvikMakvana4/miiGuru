@@ -199,6 +199,106 @@ paths:
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
 
+  /student/profile:
+    get:
+      description: Student profile
+      summary: Student profile
+      tags:
+        - Student
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "409":
+          $ref: "#/components/responses/ConflictError"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+  
+  /student/onboarding-form:
+    post:
+      summary: Onboarding form
+      tags:
+        - Student
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: rutvik makvana
+                photo:
+                  type: string
+                  format: binary
+                email:
+                  type: string
+                  example: rutvik@mailinator.com
+                birthDate:
+                  type: number
+                  example: 1738988997
+                phone:
+                  type: number
+                  example: 1234500000
+                fatherName:
+                  type: string
+                  example: abcd
+                motherName:
+                  type: string
+                  example: wxyz
+                address:
+                  type: string
+                  example: Gujarat, India
+                city:
+                  type: string
+                  example: Surat
+                country:
+                  type: string
+                  example: India
+                schoolName:
+                  type: string
+                  example: SCET
+                board:
+                  type: string
+                  example: GTU
+                mediumOfStudy:
+                  type: string
+                  example: English 
+                class:
+                  type: string
+                  example: 9     
+                major:
+                  type: Stirng
+                  example: major
+                subjects:
+                  type: array  
+                otherSubject:
+                  type: string
+                  example: Gujarati
+                otherActivities:
+                  type: string
+                  example: Dancing
+                selectedDays:
+                  type: array
+                timeAvailability:
+                  type: string
+                  example: 11:11 hrs
+                timeToFinish:
+                  type: string
+                  example: 2 months
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+
   /other/contact-us:
     post:
       description: Contact Us

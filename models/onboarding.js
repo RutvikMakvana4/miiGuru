@@ -14,6 +14,11 @@ const onboardingSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    photo: {
+        type: String,
+        required: true,
+        default: null
+    },
     email: {
         type: String,
         required: true
@@ -30,7 +35,7 @@ const onboardingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    currentAddress: {
+    address: {
         type: String,
         required: true
     },
@@ -71,7 +76,7 @@ const onboardingSchema = new mongoose.Schema({
     otherActivities: {
         type: String,
     },
-    selectDays: {
+    selectedDays: {
         type: [String],
         required: true
     },
