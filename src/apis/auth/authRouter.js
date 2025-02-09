@@ -26,4 +26,8 @@ routes.get(
   AuthController.socialLogin
 );
 
+routes.post('/forgot-password', asyncHandler(AuthController.forgotPassword));
+routes.get('/forgotPage/:token', asyncHandler(AuthController.forgotPage));
+routes.post('/forgotPage/:token', asyncHandler(AuthController.resetPassword));
+
 module.exports = routes;

@@ -199,6 +199,33 @@ paths:
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
 
+  /auth/forgot-password:
+    post:
+      summary: Forgot password
+      description: |
+        - forgot password
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: rutvik@mailinator.com
+              required:
+                - email
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+
   /student/profile:
     get:
       description: Student profile

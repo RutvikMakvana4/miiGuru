@@ -17,7 +17,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: true,
     },
-    googleId:{
+    refKey: {
+      type: Boolean,
+      default: false
+    },
+    googleId: {
       type: String,
     },
     facebookId: {
