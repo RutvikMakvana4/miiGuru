@@ -9,8 +9,8 @@ class AuthController {
    * @returns 
    */
   static async register(req, res) {
-    await AuthServices.register(req.body);
-    return res.send({ message: "User registered successfully" })
+    const data = await AuthServices.register(req.body);
+    return res.send({ message: "User registered successfully", data })
   }
 
   /**

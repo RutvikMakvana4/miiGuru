@@ -30,10 +30,14 @@ class AuthServices {
 
         const hashedPassword = await bcrypt.hash(password, BCRYPT.SALT_ROUND);
 
-        return await User.create({
+        const newUser = await User.create({
             email,
             password: hashedPassword
         });
+
+        const authentication = await authHelper.generateTokenPairs(newUser._id)
+
+        return { ...new LoginResource(newUser), authentication }
     }
 
 
