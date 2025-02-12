@@ -52,6 +52,7 @@ app.use(mainRouter);
 app.use(express.static(path.join(__dirname + "/public")));
 app.use(errorMiddleware);
 
+
 app.listen(PORT, () => {
   console.log(`Server is running at http://${HOST}:${PORT}`);
 });
