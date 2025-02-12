@@ -18,14 +18,6 @@ routes.get(
   AuthController.socialLogin
 );
 
-// Facebook Auth
-routes.get("/facebook", passport.authenticate("facebook", { scope: ["email"] }));
-routes.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", { session: false }),
-  AuthController.socialLogin
-);
-
 routes.post('/forgot-password', asyncHandler(AuthController.forgotPassword));
 routes.get('/forgotPage/:token', asyncHandler(AuthController.forgotPage));
 routes.post('/forgotPage/:token', asyncHandler(AuthController.resetPassword));

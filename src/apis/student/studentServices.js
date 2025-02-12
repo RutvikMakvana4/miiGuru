@@ -18,7 +18,7 @@ class StudentServices {
             throw new NotFoundException("Student not found")
         }
 
-        return { ... new LoginResource(findStudent) }
+        return new LoginResource(findStudent);
     }
 
 
@@ -59,9 +59,7 @@ class StudentServices {
             ...updateData,
             photo: photo
         });
-        return {
-            ... new StudentOnboardingDetailResource(studentFormDetails)
-        }
+        return new StudentOnboardingDetailResource(studentFormDetails);
     }
 }
 

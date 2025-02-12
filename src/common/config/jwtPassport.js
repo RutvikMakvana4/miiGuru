@@ -1,7 +1,6 @@
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { Strategy as FacebookStrategy } from "passport-facebook";
 import User from "../../../models/users";
 import { JWT } from "../constants/constants";
 import AccessToken from "../../../models/accessToken";
@@ -50,31 +49,6 @@ passport.use(new GoogleStrategy(googleOptions, async (req, accessToken, refreshT
         googleId: profile.id,
         email: profile.emails[0].value,
         name: profile.displayName
-      });
-    }
-    return done(null, user);
-  } catch (error) {
-    return done(error, false);
-  }
-}));
-
-
-const facebookOptions = {
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  callbackURL: "/api/v1/auth/facebook/callback",
-  profileFields: ["id", "emails", "name"]
-}
-
-// Facebook OAuth Strategy
-passport.use(new FacebookStrategy(facebookOptions, async (accessToken, refreshToken, profile, done) => {
-  try {
-    let user = await User.findOne({ facebookId: profile.id });
-    if (!user) {
-      user = await User.create({
-        facebookId: profile.id,
-        email: profile.emails[0].value,
-        name: `${profile.name.givenName} ${profile.name.familyName}`
       });
     }
     return done(null, user);

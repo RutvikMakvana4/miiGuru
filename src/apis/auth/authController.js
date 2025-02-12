@@ -9,8 +9,8 @@ class AuthController {
    * @returns 
    */
   static async register(req, res) {
-    const data = await AuthServices.register(req.body);
-    return res.send({ message: "User registered successfully", data })
+    const response = await AuthServices.register(req.body);
+    return res.status(response.status).json(response);
   }
 
   /**
@@ -20,8 +20,8 @@ class AuthController {
    * @returns 
    */
   static async login(req, res) {
-    const data = await AuthServices.login(req.body);
-    return res.send({ message: "User login successfully", data })
+    const response = await AuthServices.login(req.body);
+    return res.status(response.status).json(response);
   }
 
   /**
@@ -31,8 +31,8 @@ class AuthController {
    * @returns 
    */
   static async logout(req, res) {
-    await AuthServices.logout(req, res);
-    return res.send({ message: "User logout successfully" })
+    const response = await AuthServices.logout(req);
+    return res.status(response.status).json(response);
   }
 
   /**

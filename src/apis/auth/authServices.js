@@ -37,7 +37,12 @@ class AuthServices {
 
         const authentication = await authHelper.generateTokenPairs(newUser._id)
 
-        return { ...new LoginResource(newUser), authentication }
+        return {
+            success: true,
+            status: 201,
+            message: "User registered successfully",
+            data: { ...new LoginResource(newUser), authentication },
+          };
     }
 
 
@@ -57,7 +62,12 @@ class AuthServices {
 
         const authentication = await authHelper.generateTokenPairs(findUser._id)
 
-        return { ...new LoginResource(findUser), authentication }
+        return {
+            success: true,
+            status: 200,
+            message: "Login successful",
+            data: { ...new LoginResource(findUser), authentication },
+          };
     }
 
     /**
@@ -76,7 +86,8 @@ class AuthServices {
         }
         await AccessToken.findByIdAndDelete({ _id: findToken._id });
         await RefreshToken.findOneAndDelete({ accessToken: findToken.token });
-        return
+        
+        return { success: true, status: 200, message: "Logout successful", data: {} };
     }
 
     /**

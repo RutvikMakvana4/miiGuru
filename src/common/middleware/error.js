@@ -1,29 +1,36 @@
 import { validationError } from "../exceptions/statusCodes";
 import GeneralError from "../../common/exceptions/generalError";
 
-const error = (error, req, res, next) => {
+const errorHandler = (error, req, res, next) => {
   if (error instanceof GeneralError) {
-    return res.status(error.status).json({ message: error.message });
+    return res.status(error.status).json({
+      success: false,
+      status: error.status,
+      message: error.message,
+    });
   }
 
   if (error && error.error && error.error.isJoi) {
     return res.status(validationError).json({
-      status: "error",
+      success: false,
+      status: validationError,
       message: error.error.details[0].message,
     });
   }
 
   if (error.statusCode) {
     return res.status(error.statusCode).json({
-      status: "error",
-      message: error.message,
-    });
-  } else {
-    return res.status(500).json({
-      status: "error",
+      success: false,
+      status: error.statusCode,
       message: error.message,
     });
   }
+
+  return res.status(500).json({
+    success: false,
+    status: 500,
+    message: "Internal Server Error",
+  });
 };
 
-module.exports = error;
+export default errorHandler;
