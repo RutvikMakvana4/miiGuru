@@ -10,11 +10,20 @@ import mainRouter from "../routes/index";
 import errorMiddleware from "./common/middleware/error";
 import swaggerSetup from "./common/swagger";
 import { JWT } from "./common/constants/constants";
+import cors from "cors";
 
 const app = express();
 
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
+
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type, Authorization",
+  })
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
