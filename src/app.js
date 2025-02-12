@@ -4,12 +4,12 @@ import session from "express-session";
 import path from "path";
 import flash from "connect-flash";
 import MongoStore from "connect-mongo";
-import "./src/common/config/dbConnection";
-import "./src/common/config/jwtPassport";
-import mainRouter from "./routes/index";
-import errorMiddleware from "./src/common/middleware/error";
-import swaggerSetup from "./src/common/swagger";
-import { JWT } from "./src/common/constants/constants";
+import "./common/config/dbConnection";
+import "./common/config/jwtPassport";
+import mainRouter from "../routes/index";
+import errorMiddleware from "./common/middleware/error";
+import swaggerSetup from "./common/swagger";
+import { JWT } from "./common/constants/constants";
 
 const app = express();
 
