@@ -115,8 +115,7 @@ class AuthServices {
             throw new NotFoundException("This email is not register");
         } else {
             const token = jwt.sign({ id: findUser._id }, JWT.SECRET, { expiresIn: 300 });
-            const link = `http://localhost:3000/resetpassword/?token=${token}`;
-
+            const link = `http://localhost:3000/resetpassword/?token=${token}&email=${findUser.email}`;
 
             const obj = {
                 to: email,
