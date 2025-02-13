@@ -1,7 +1,7 @@
 import AccessToken from "../../../models/accessToken";
 import RefreshToken from "../../../models/refreshToken";
 import User from "../../../models/users";
-import { BadRequestException, ConflictException, NotFoundException, UnauthorizedException } from "../../common/exceptions/errorException";
+import { BadRequestException, ConflictException, NotFoundException, UnauthorizedException, ValidationError } from "../../common/exceptions/errorException";
 import authHelper from "../../common/helper/authHelper";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -42,7 +42,7 @@ class AuthServices {
             status: 201,
             message: "User registered successfully",
             data: { ...new LoginResource(newUser), authentication },
-          };
+        };
     }
 
 
@@ -67,7 +67,7 @@ class AuthServices {
             status: 200,
             message: "Login successful",
             data: { ...new LoginResource(findUser), authentication },
-          };
+        };
     }
 
     /**
@@ -86,7 +86,7 @@ class AuthServices {
         }
         await AccessToken.findByIdAndDelete({ _id: findToken._id });
         await RefreshToken.findOneAndDelete({ accessToken: findToken.token });
-        
+
         return { success: true, status: 200, message: "Logout successful", data: {} };
     }
 
@@ -115,7 +115,8 @@ class AuthServices {
             throw new NotFoundException("This email is not register");
         } else {
             const token = jwt.sign({ id: findUser._id }, JWT.SECRET, { expiresIn: 300 });
-            const link = baseUrl(`api/v1/auth/forgotPage/${token}`);
+            const link = `http://localhost:3000/resetpassword/?token=${token}`;
+
 
             const obj = {
                 to: email,
@@ -128,70 +129,73 @@ class AuthServices {
             });
 
             sendMail(obj, 'forgotPassword');
+
+            return { success: true, status: 200, message: "Reset password link has been sent to the email address" };
+
         }
     }
 
 
-
     /**
-    * @description: Forgot password page load
-    * @param {*} token 
-    * @param {*} req 
-    * @param {*} res 
-    */
-    static async forgotPage(token, req, res) {
-        try {
-            const verifyToken = jwt.verify(token, JWT.SECRET);
-            const forgotRefKey = await User.findOne({ _id: verifyToken.id });
-            if (verifyToken) {
-                return res.render('forgotPassword/resetPassword', { layout: "forgotPassword/resetPassword", "forgotPassRefKey": forgotRefKey })
-            }
-        } catch (err) {
-            if (err.name === 'TokenExpiredError') {
-                return res.status(403).send({ message: "Your link has been expired" });
-            }
-            return res.status(403).send({ message: "Invalid token" });
-        }
-    }
-
-
-
-    /**
-     * @description: Resetpassword
-     * @param {*} token 
-     * @param {*} data 
-     * @param {*} req 
-     * @param {*} res 
+     * @description: Verify token validity
+     * @param {*} token
      */
-    static async resetPassword(token, data, req, res) {
-        const { newPassword, confirmPassword } = data;
-        const isValid = jwt.verify(token, JWT.SECRET);
-        if (isValid) {
-            if (newPassword == "" || confirmPassword == "") {
-                req.flash('error', 'New Password and Confirm Password is required');
-                return res.redirect("back");
-            } else {
-                if (newPassword.length < 8) {
-                    req.flash('error', 'Your password needs to be at least 8 characters long');
-                    return res.redirect("back");
-                } else {
-                    if (newPassword === confirmPassword) {
-                        const hashPass = await bcrypt.hash(newPassword, BCRYPT.SALT_ROUND);
-                        const findId = await User.findByIdAndUpdate(isValid.id, { password: hashPass, refKey: false });
-                        if (findId) {
-                            req.flash('success', 'Password has been changed');
-                            return res.redirect('back');
-                        }
-                    } else {
-                        req.flash('error', 'password and confirm password does not match');
-                        return res.redirect('back');
-                    }
-                }
-            }
+    static async verifyToken(token) {
+        try {
+            const decoded = jwt.verify(token, JWT.SECRET);
+            const user = await User.findOne({ _id: decoded.id });
+            if (!user) throw new BadRequestException("Invalid token");
 
-        } else {
-            req.flash('error', 'Link has been Expired');
-            return res.redirect('back');
+            return { success: true, status: 200, message: "Verify token successfully" };
+        } catch (err) {
+            return { success: false, status: 400, message: "Invalid or expired token" };
+        }
+    }
+
+
+    /**
+     * @description: Resend Forgot Password Email
+     * @param {*} data
+     */
+    static async resendEmail(data) {
+        return this.forgotPassword(data);
+    }
+
+    /**
+     * @description: Reset Password
+     * @param {*} token
+     * @param {*} newPassword
+     * @param {*} confirmPassword
+     */
+    static async resetPassword(token, data) {
+        const { newPassword, confirmPassword } = data;
+        if (!newPassword || !confirmPassword) {
+            throw new ValidationError("Both fields are required");
+        }
+
+        if (newPassword.length < 8) {
+            throw new ValidationError("Password must be at least 8 characters");
+        }
+
+        if (newPassword !== confirmPassword) {
+            throw new BadRequestException("Passwords do not match");
+        }
+
+        try {
+            const decoded = jwt.verify(token, JWT.SECRET);
+            const hashPass = await bcrypt.hash(newPassword, BCRYPT.SALT_ROUND);
+
+            const user = await User.findOneAndUpdate(
+                { _id: decoded.id },
+                { password: hashPass },
+                { new: true }
+            );
+
+            if (!user) throw new NotFoundException("Invalid token or user not found");
+
+            return { success: true, status: 200, message: "Password reset successfully" };
+        } catch (err) {
+            throw new BadRequestException("Invalid or expired token");
         }
     }
 

@@ -6,4 +6,6 @@ module.exports = {
     BCRYPT: {
         SALT_ROUND: 12
     },
+
+    FRONTEND_URL: `http://localhost:3000`
 };

@@ -69,29 +69,34 @@ class AuthController {
      * @returns 
      */
   static async forgotPassword(req, res) {
-    await AuthServices.forgotPassword(req.body);
-    return res.send({ message: "Reset password link has been sent to the email address" });
+    const response = await AuthServices.forgotPassword(req.body);
+    return res.status(response.status).json(response);
   }
 
-
   /**
-   * @description: Forgot password page
-   * @param {*} req 
-   * @param {*} res 
+   * @description: Verify Token
    */
-  static async forgotPage(req, res) {
-    await AuthServices.forgotPage(req.params.token, req, res)
+  static async verifyToken(req, res) {
+    const response = await AuthServices.verifyToken(req.params.token);
+    return res.status(response.success ? 200 : 400).send(response);
   }
 
+  /**
+   * @description: Resend Forgot Password Email
+   */
+  static async resendEmail(req, res) {
+    const response = await AuthServices.resendEmail(req.body);
+    return res.status(response.status).json(response);
+  }
 
   /**
-   * @description: Reset password
-   * @param {*} req 
-   * @param {*} res 
+   * @description: Reset Password
    */
   static async resetPassword(req, res) {
-    await AuthServices.resetPassword(req.params.token, req.body, req, res);
+    const response = await AuthServices.resetPassword(req.params.token, req.body);
+    return res.status(response.status).json(response);
   }
+
 }
 
 export default AuthController;

@@ -226,6 +226,94 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
 
+  /auth/verify-token/{token}:
+    post:
+      summary: Verify token
+      description: |
+        - Verify token
+      tags:
+        - Auth
+      
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            example: 659e45cbd2d793f9ca90420beghfgdhfghdghgdhfhgweyurtyuwytuyruwgfchrhvhvvagfghfbhrbb
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+
+  /auth/resend-email:
+    post:
+      summary: Resend email
+      description: |
+        - Resend email
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: rutvik@mailinator.com
+              required:
+                - email
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+
+  /auth/reset-password/{token}:
+    post:
+      summary: Verify token
+      description: |
+        - Verify token
+      tags:
+        - Auth
+      
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            example: 659e45cbd2d793f9ca90420beghfgdhfghdghgdhfhgweyurtyuwytuyruwgfchrhvhvvagfghfbhrbb
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                  example: Rutvik@111
+                confirmPassword:
+                  type: string
+                  example: Rutvik@111
+              required:
+                - newPassword
+                - confirmPassword
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"       
+
   /student/profile:
     get:
       description: Student profile

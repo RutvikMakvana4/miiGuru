@@ -19,7 +19,8 @@ routes.get(
 );
 
 routes.post('/forgot-password', asyncHandler(AuthController.forgotPassword));
-routes.get('/forgotPage/:token', asyncHandler(AuthController.forgotPage));
-routes.post('/forgotPage/:token', asyncHandler(AuthController.resetPassword));
+routes.post("/verify-token/:token", asyncHandler(AuthController.verifyToken));
+routes.post("/resend-email", asyncHandler(AuthController.resendEmail));
+routes.post("/reset-password/:token", asyncHandler(AuthController.resetPassword));
 
 module.exports = routes;
