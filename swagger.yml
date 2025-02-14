@@ -117,6 +117,28 @@ paths:
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
 
+  /auth/verify-email/{token}:
+    post:
+      summary: Verify email
+      description: |
+        - Verify email
+      tags:
+        - Auth
+      
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            example: 659e45cbd2d793f9ca90420beghfgdhfghdghgdhfhgweyurtyuwytuyruwgfchrhvhvvagfghfbhrbb
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+
   /auth/login:
     post:
       description: login user

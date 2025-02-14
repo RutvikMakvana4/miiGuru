@@ -13,6 +13,15 @@ class AuthController {
     return res.status(response.status).json(response);
   }
 
+
+    /**
+   * @description: Verify email
+   */
+    static async verifyEmail(req, res) {
+      const response = await AuthServices.verifyEmail(req.params.token);
+      return res.status(response.success ? 200 : 400).send(response);
+    }
+
   /**
    * @description: User login
    * @param {*} req 
