@@ -8,6 +8,7 @@ module.exports = {
     },
 
     URL: {
+        LOCALHOST: `http://localhost:3000`,
         FRONTEND: `https://mii-guru-frontend.vercel.app`
     }
 };
