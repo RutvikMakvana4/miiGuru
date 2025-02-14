@@ -14,13 +14,21 @@ class AuthController {
   }
 
 
-    /**
+  /**
    * @description: Verify email
    */
-    static async verifyEmail(req, res) {
-      const response = await AuthServices.verifyEmail(req.params.token);
-      return res.status(response.success ? 200 : 400).send(response);
-    }
+  static async verifyEmail(req, res) {
+    const response = await AuthServices.verifyEmail(req.params.token);
+    return res.status(response.success ? 200 : 400).send(response);
+  }
+
+  /**
+ * @description: Resend Verify email
+ */
+  static async resendEmailVerify(req, res) {
+    const response = await AuthServices.resendEmailVerify(req.body);
+    return res.status(response.status).json(response);
+  }
 
   /**
    * @description: User login

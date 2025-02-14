@@ -139,6 +139,33 @@ paths:
         "404":
           $ref: "#/components/responses/NotFoundError"
 
+  /auth/resend-verify-email:
+    post:
+      summary: Resend verify email
+      description: |
+        - Resend verify email
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: rutvik@mailinator.com
+              required:
+                - email
+
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+
   /auth/login:
     post:
       description: login user

@@ -25,7 +25,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `http://localhost:3000/verify-email?token=${verificationToken}`;
+        const verificationLink = `http://localhost:3000/verify-email?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -78,7 +78,30 @@ class AuthServices {
         }
     }
 
+    /**
+     * @description: Resend email verify
+     * @param {*} data 
+     */
+    static async resendEmailVerify(data) {
+        const { email } = data;
 
+        const verificationToken = jwt.sign({ email }, JWT.SECRET, { expiresIn: "1h" });
+
+        const verificationLink = `http://localhost:3000/resend-verify-email?token=${verificationToken}&email=${email}`;
+        const emailData = {
+            to: email,
+            subject: "Verify Your Email",
+            data: { link: verificationLink }
+        };
+
+        sendMail(emailData, 'emailVerification');
+
+        return {
+            success: true,
+            status: 201,
+            message: "Please check your email to verify your account.",
+        };
+    }
 
     /**
      * @description: User login
