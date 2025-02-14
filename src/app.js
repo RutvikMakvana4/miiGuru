@@ -17,13 +17,25 @@ const app = express();
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: "*",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type, Authorization",
-  })
-);
+const allowedOrigins = [
+  "https://mii-guru-frontend.vercel.app",
+  "http://localhost:3000",
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
