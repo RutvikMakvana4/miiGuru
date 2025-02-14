@@ -1,3 +1,4 @@
+import { URL } from "../../common/constants/constants";
 import AuthServices from "./authServices";
 
 class AuthController {
@@ -73,7 +74,7 @@ class AuthController {
     try {
       const user = req.user;
       const authentication = await authHelper.generateTokenPairs(user._id);
-      return res.redirect(`http://localhost:3000?token=${authentication.accessToken}`);
+      return res.redirect(`${URL.FRONTEND}?token=${authentication.accessToken}`);
     } catch (error) {
       return res.status(500).json({ message: "Authentication failed", error });
     }

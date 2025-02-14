@@ -5,7 +5,7 @@ import { BadRequestException, ConflictException, NotFoundException, Unauthorized
 import authHelper from "../../common/helper/authHelper";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { BCRYPT, JWT } from "../../common/constants/constants";
+import { BCRYPT, JWT, URL } from "../../common/constants/constants";
 import LoginResource from "./resources/loginResource";
 import { baseUrl } from "../../common/constants/configConstants";
 import { sendMail } from "../../common/sendEmail";
@@ -25,7 +25,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `http://localhost:3000/verify-email?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/verify-email?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -87,7 +87,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `http://localhost:3000/resend-verify-email?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/resend-verify-email?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -172,7 +172,7 @@ class AuthServices {
             throw new NotFoundException("This email is not register");
         } else {
             const token = jwt.sign({ id: findUser._id }, JWT.SECRET, { expiresIn: 300 });
-            const link = `http://localhost:3000/resetpassword/?token=${token}&email=${findUser.email}`;
+            const link = `${URL.FRONTEND}/resetpassword/?token=${token}&email=${findUser.email}`;
 
             const obj = {
                 to: email,

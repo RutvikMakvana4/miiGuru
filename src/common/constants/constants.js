@@ -7,5 +7,7 @@ module.exports = {
         SALT_ROUND: 12
     },
 
-    FRONTEND_URL: `http://localhost:3000`
+    URL: {
+        FRONTEND: `https://mii-guru-frontend.vercel.app`
+    }
 };
