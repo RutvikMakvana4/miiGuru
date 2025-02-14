@@ -20,6 +20,7 @@ const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
   "https://mii-guru-frontend.vercel.app",
   "http://localhost:3000",
+  "http://localhost:6001"
 ];
 
 const corsOptions = {

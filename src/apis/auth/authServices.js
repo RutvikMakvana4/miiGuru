@@ -23,7 +23,7 @@ class AuthServices {
             throw new ConflictException("Password and Confirm Password do not match.");
         }
 
-        const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: "1h" });
+        const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: JWT.EXPIRES_IN });
 
         const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
         const emailData = {
@@ -47,35 +47,32 @@ class AuthServices {
      * @returns 
      */
     static async verifyEmail(token) {
-        try {
-            const decoded = jwt.verify(token, JWT.SECRET);
-            const { email, password } = decoded;
+        console.log("verify email api call")
+        const decoded = jwt.verify(token, JWT.SECRET);
 
-            const existingUser = await User.findOne({ email });
-            if (existingUser) {
-                throw new ConflictException("Email is already verified and registered.");
-            }
+        const { email, password } = decoded;
 
-            const hashedPassword = await bcrypt.hash(password, BCRYPT.SALT_ROUND);
-
-            const newUser = await User.create({
-                email,
-                password: hashedPassword,
-                isVerified: true,
-            });
-
-            const authentication = await authHelper.generateTokenPairs(newUser._id)
-
-            return {
-                success: true,
-                status: 200,
-                message: "Email verified. You are now registered!",
-                data: { ...new LoginResource(newUser), authentication },
-            };
-
-        } catch (err) {
-            throw new BadRequestException("Invalid or expired verification link");
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw new ConflictException("Email is already verified and registered.");
         }
+
+        const hashedPassword = await bcrypt.hash(password, BCRYPT.SALT_ROUND);
+
+        const newUser = await User.create({
+            email,
+            password: hashedPassword,
+            isVerified: true,
+        });
+
+        const authentication = await authHelper.generateTokenPairs(newUser._id)
+
+        return {
+            success: true,
+            status: 200,
+            message: "Email verified. You are now registered!",
+            data: { ...new LoginResource(newUser), authentication },
+        };
     }
 
     /**

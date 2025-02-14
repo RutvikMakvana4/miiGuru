@@ -2,6 +2,7 @@ import { validationError } from "../exceptions/statusCodes";
 import GeneralError from "../../common/exceptions/generalError";
 
 const errorHandler = (error, req, res, next) => {
+
   if (error instanceof GeneralError) {
     return res.status(error.status).json({
       success: false,
@@ -24,13 +25,13 @@ const errorHandler = (error, req, res, next) => {
       status: error.statusCode,
       message: error.message,
     });
+  } else {
+    return res.status(500).json({
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    });
   }
-
-  return res.status(500).json({
-    success: false,
-    status: 500,
-    message: "Internal Server Error",
-  });
 };
 
 export default errorHandler;
