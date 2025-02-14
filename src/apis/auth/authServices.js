@@ -25,7 +25,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `${URL.FRONTEND}/verify-email?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -87,7 +87,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `${URL.FRONTEND}/resend-verify-email?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
