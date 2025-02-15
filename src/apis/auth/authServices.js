@@ -25,7 +25,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: JWT.EXPIRES_IN });
 
-        const verificationLink = `${URL.LOCALHOST}/verify?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -84,7 +84,7 @@ class AuthServices {
 
         const verificationToken = jwt.sign({ email }, JWT.SECRET, { expiresIn: "1h" });
 
-        const verificationLink = `${URL.LOCALHOST}/verify?token=${verificationToken}&email=${email}`;
+        const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
         const emailData = {
             to: email,
             subject: "Verify Your Email",
@@ -169,7 +169,7 @@ class AuthServices {
             throw new NotFoundException("This email is not register");
         } else {
             const token = jwt.sign({ id: findUser._id }, JWT.SECRET, { expiresIn: 300 });
-            const link = `${URL.LOCALHOST}/resetpassword/?token=${token}&email=${findUser.email}`;
+            const link = `${URL.FRONTEND}/resetpassword/?token=${token}&email=${findUser.email}`;
 
             const obj = {
                 to: email,
