@@ -6,5 +6,6 @@ export default class LoginResource {
         this.name = data.name;
         this.email = data.email;
         this.joinedAt = moment(data.createdAt).unix();
+        this.isAdmin = data.isAdmin;
     }
 }

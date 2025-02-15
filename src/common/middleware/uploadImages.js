@@ -18,7 +18,7 @@ const storeFile = (destination, filename, type = "single") => {
     const upload =
       type === "single"
         ? multer({ storage }).single(filename)
-        : multer({ storage }).array(filename);
+        : multer({ storage }).fields(filename);
 
     upload(req, res, (err) => {
       if (err) {

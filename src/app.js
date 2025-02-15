@@ -12,6 +12,8 @@ import swaggerSetup from "./common/swagger";
 import { JWT } from "./common/constants/constants";
 import cors from "cors";
 
+import "../seeders/adminSeeder";
+
 const app = express();
 
 const HOST = process.env.HOST;
