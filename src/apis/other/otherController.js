@@ -8,7 +8,7 @@ class OtherController {
         * @returns 
         */
     static async contactUs(req, res) {
-        const contact = await OtherServices.contactUs(req.body, req.user);
+        const contact = await OtherServices.contactUs(req.body);
         return res.status(201).json({
             success: true,
             status: 201,

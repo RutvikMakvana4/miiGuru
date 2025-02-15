@@ -470,9 +470,6 @@ paths:
       tags:
         - Others
 
-      security:
-        - bearerAuth: []
-
       requestBody:
         required: true
         content:

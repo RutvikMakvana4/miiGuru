@@ -5,6 +5,6 @@ import authentication from "../../common/middleware/authentication";
 
 const routes = express.Router();
 
-routes.post("/contact-us", authentication, asyncHandler(OtherController.contactUs));
+routes.post("/contact-us", asyncHandler(OtherController.contactUs));
 
 module.exports = routes;

@@ -5,9 +5,8 @@ class OtherServices {
      * @description: Contact Us
      * @param {*} data 
      */
-    static async contactUs(data, auth) {
+    static async contactUs(data) {
         return await ContactUs.create({
-            userId: auth,
             ...data
         })
     }

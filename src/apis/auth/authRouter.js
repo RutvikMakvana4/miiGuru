@@ -2,6 +2,7 @@ import AuthController from "./authController";
 import express from "express";
 import asyncHandler from "express-async-handler";
 import passport from "passport";
+import authentication from "../../common/middleware/authentication";
 
 const routes = express.Router();
 
@@ -9,7 +10,7 @@ routes.post("/register", asyncHandler(AuthController.register));
 routes.post("/verify-email/:token", asyncHandler(AuthController.verifyEmail));
 routes.post("/resend-verify-email", asyncHandler(AuthController.resendEmailVerify));
 routes.post("/login", asyncHandler(AuthController.login));
-routes.post("/logout", asyncHandler(AuthController.logout));
+routes.post("/logout", authentication, asyncHandler(AuthController.logout));
 routes.post("/refresh-token", asyncHandler(AuthController.newAccessToken));
 
 // Google Auth
