@@ -3,6 +3,7 @@ import authRoutes from "../src/apis/auth/authRouter";
 import otherRoutes from "../src/apis/other/otherRouter";
 import studentRoutes from "../src/apis/student/studentRouter";
 import adminRoutes from "../src/apis/admin/adminRouter";
+import teacherRoutes from "../src/apis/teachers/teacherRouter";
 
 const routes = express.Router();
 
@@ -24,5 +25,6 @@ routes.use("/auth", authRoutes);
 routes.use("/other", otherRoutes);
 routes.use("/student", studentRoutes);
 routes.use("/admin", adminRoutes);
+routes.use("/teacher", teacherRoutes);
 
 module.exports = routes;

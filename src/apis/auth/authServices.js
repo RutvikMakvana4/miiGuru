@@ -9,7 +9,14 @@ import { BCRYPT, JWT, URL } from "../../common/constants/constants";
 import LoginResource from "./resources/loginResource";
 import { baseUrl } from "../../common/constants/configConstants";
 import { sendMail } from "../../common/sendEmail";
+import { google } from "googleapis";
+import axios from "axios";
 
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    "postmessage"
+);
 
 class AuthServices {
     /**
@@ -249,6 +256,43 @@ class AuthServices {
             return { success: true, status: 200, message: "Password reset successfully" };
         } catch (err) {
             throw new BadRequestException("Invalid or expired token");
+        }
+    }
+
+
+    /**
+     * @description: google social login
+     * @param {*} query 
+     */
+    static async googleLogin(query) {
+        try {
+            const { code } = query;
+
+            const { tokens } = await oauth2Client.getToken(code);
+            const accessToken = tokens.access_token;
+
+            const userRes = await axios.get(
+                `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${accessToken}`
+            );
+
+            const { email, id } = userRes.data;
+
+            let user = await User.findOneAndUpdate(
+                { email },
+                { email, googleId: id },
+                { upsert: true, new: true, setDefaultsOnInsert: true }
+            );
+
+            const authentication = await authHelper.generateTokenPairs(user._id)
+
+            return {
+                success: true,
+                status: 200,
+                message: "Login successful",
+                data: { ...new LoginResource(user), authentication },
+            };
+        } catch (error) {
+            console.log(error)
         }
     }
 

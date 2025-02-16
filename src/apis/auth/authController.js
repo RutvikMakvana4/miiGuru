@@ -65,22 +65,6 @@ class AuthController {
   }
 
   /**
-   * @description: Social login
-   * @param {*} req 
-   * @param {*} res 
-   * @returns 
-   */
-  static async socialLogin(req, res) {
-    try {
-      const user = req.user;
-      const authentication = await authHelper.generateTokenPairs(user._id);
-      return res.redirect(`${URL.FRONTEND}?token=${authentication.accessToken}`);
-    } catch (error) {
-      return res.status(500).json({ message: "Authentication failed", error });
-    }
-  }
-
-  /**
      * @description: Forgot password link generate
      * @param {*} req 
      * @param {*} res 
@@ -112,6 +96,14 @@ class AuthController {
    */
   static async resetPassword(req, res) {
     const response = await AuthServices.resetPassword(req.params.token, req.body);
+    return res.status(response.status).json(response);
+  }
+
+  /**
+   * @description: Google Login
+   */
+  static async googleLogin(req, res) {
+    const response = await AuthServices.googleLogin(req.query);
     return res.status(response.status).json(response);
   }
 
