@@ -3,6 +3,8 @@ import GeneralError from "../../common/exceptions/generalError";
 
 const errorHandler = (error, req, res, next) => {
 
+  console.log(error, "Error middleware")
+
   if (error instanceof GeneralError) {
     return res.status(error.status).json({
       success: false,
