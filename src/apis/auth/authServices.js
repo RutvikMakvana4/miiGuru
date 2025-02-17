@@ -30,6 +30,11 @@ class AuthServices {
             throw new ConflictException("Password and Confirm Password do not match.");
         }
 
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw new ConflictException("Email is already registered.");
+        }
+
         const verificationToken = jwt.sign({ email, password }, JWT.SECRET, { expiresIn: JWT.EXPIRES_IN });
 
         const verificationLink = `${URL.FRONTEND}/verify?token=${verificationToken}&email=${email}`;
@@ -116,9 +121,13 @@ class AuthServices {
         const findUser = await User.findOne({ email })
         if (!findUser) throw new NotFoundException("This email id is not registered. please register first")
 
+        if (!findUser.password) {
+            throw new BadRequestException("This email is registered with Google. Please log in using Google.");
+        }
+
         const isPasswordMatch = await bcrypt.compare(password, findUser.password);
         if (!isPasswordMatch) {
-            throw new BadRequestException("Invalid password")
+            throw new BadRequestException("Invalid password");
         }
 
         const authentication = await authHelper.generateTokenPairs(findUser._id)
@@ -277,9 +286,17 @@ class AuthServices {
 
             const { email, id } = userRes.data;
 
-            let user = await User.findOneAndUpdate(
+            let user = await User.findOne({ email });
+
+            if (user) {
+                if (!user.googleId) {
+                    throw new ConflictException("This email is registered with a password. Please log in using email and password.");
+                }
+            }
+
+            user = await User.findOneAndUpdate(
                 { email },
-                { email, googleId: id },
+                { email, googleId: id, isVerified: true },
                 { upsert: true, new: true, setDefaultsOnInsert: true }
             );
 
